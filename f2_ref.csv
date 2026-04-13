@@ -1,0 +1,12 @@
+﻿sf_id;city;cp;contrat_type;segment_client;region;pays;date_maj
+C001;Paris;75001;PRO;Grand compte;IDF;France;2024-01-15
+C002;Lyon;69002;PME;Moyen compte;ARA;France;2024-02-10
+C003;Marseille;13001;TPE;Petit compte;PACA;France;2024-01-20
+C004;Bordeaux;33000;PRO;Grand compte;NAQ;France;2024-03-05
+C005;Nantes;44000;PME;Moyen compte;PDL;France;2024-02-28
+C006;Strasbourg;67000;TPE;Petit compte;GES;France;2024-01-08
+C007;Toulouse;31000;PRO;Grand compte;OCC;France;2024-03-12
+C008;Nice;06000;PME;Moyen compte;PACA;France;2024-02-14
+c009;Rennes;35000;TPE;Petit compte;BRE;France;2024-01-30
+C010;Lille;59000;PRO;Grand compte;HDF;France;2024-03-20
+C011;Grenoble;38000;PME;Moyen compte;ARA;France;2024-02-05

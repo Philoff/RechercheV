@@ -1,0 +1,83 @@
+Spécification fonctionnelle et technique complète du programme de fusion des 2 Csv
+---
+
+# Spécification Fonctionnelle : Projet rechercheV (v2.7)
+
+**Objet :** Connecteur d'enrichissement de données d'un fichier 1 via un fichier 2.
+
+## 1. Objectif du Programme
+
+Le programme a pour but de prendre un fichier source (**Fichier 1 **) et de compléter ses colonnes existantes avec des informations provenant d'un fichier pivot (**Fichier 2 **), en utilisant une clé de liaison commune (exemple le `pds_ref`).
+
+---
+
+## 2. Interface Utilisateur (UI)
+
+L'interface est conçue pour être **responsive** (s'adapte à la largeur de l'écran) et dispose d'un **ascenseur vertical** pour gérer un grand nombre de colonnes de mapping.
+
+### A. Sélection des flux (Bloc 1)
+
+* **Fichier 1 (Source ) :** Fichier CSV maître dont la structure doit être conservée.
+* **Fichier 2 (pour servir d'enrichissement) :** Fichier CSV contenant les données complémentaires.
+* **Clés de liaison :** Champs permettant de faire correspondre les lignes (ex: `pds_ref`). La recherche est **insensible à la casse** (PDS_01 = pds_01).
+
+### B. Mapping des colonnes (Bloc 2)
+
+Le mapping définit le transfert de données du Fichier 2 vers le Fichier 1.
+
+* **Colonne de gauche (Cible F1) :** Nom de la colonne dans le fichier de sortie.
+* *Cas A :* Le nom existe déjà dans le fichier 1 -> La colonne est mise à jour "sur place".
+* *Cas B :* Le nom n'existe pas -> La colonne est créée à la fin du fichier.
+
+
+* **Colonne de droite (Source F2) :** Nom exact du champ dans l'export fichier 2 (ex: `PCE_PRM__c`).
+
+### C. Statistiques et Logs (Bloc 3)
+
+Une zone de texte bleue affiche l'avancement et le bilan :
+
+* **Nombre de lignes lues :** Total du Fichier 1.
+* **Lignes enrichies :** Nombre de correspondances trouvées dans fichier 2.
+* **Lignes en rejet :** Nombre de lignes du fichier 1 absentes du fichier 2.
+
+---
+
+## 3. Logique de Traitement (Backend)
+
+### A. Gestion des fichiers et Encodages
+
+* **Lecture :** Gère le format CSV avec séparateur point-virgule (`;`). Utilise l'encodage `utf-8-sig` pour ignorer les caractères BOM Excel.
+* **Écriture :** Produit des fichiers en `utf-8` pour garantir la compatibilité des accents.
+
+### B. Algorithme d'enrichissement (Hash-Join)
+
+1. **Indexation :** Le Fichier 2 est chargé intégralement en mémoire dans un dictionnaire (Hash Map) pour un accès instantané via la clé de liaison.
+2. **Streaming :** Le Fichier 1 est lu ligne par ligne (pour ne pas saturer la RAM).
+3. **Réconciliation :** Pour chaque ligne de F1 :
+* Si la clé existe dans l'index fichier 2, les données sont injectées selon le mapping. La ligne va dans le fichier **Résultat**.
+* Sinon, la ligne est copiée telle quelle dans le fichier **REJET**.
+
+
+
+---
+
+## 4. Gestion de la Configuration (Rétro-compatibilité)
+
+Le programme sauvegarde ses réglages dans `config_enrichissement.json`.
+
+* **Compatibilité V1 :** Si le programme détecte un ancien fichier de config (où fichier 2 était parfois à gauche), il vérifie la présence du suffixe `__c`. S'il est trouvé à gauche, le programme inverse automatiquement les colonnes pour remettre fichier 1 à gauche et fichier 2 à droite dans l'interface.
+* **Persistance :** Tous les chemins de fichiers et les lignes de mapping sont mémorisés pour la session suivante.
+
+---
+
+## 5. Structure des Fichiers de Sortie
+
+1. **Fichier Résultat :**
+* Conserve l'ordre original des colonnes du Fichier 1.
+* Ne crée **pas de doublons** : si une colonne mappée existe déjà dans la source, elle est complétée à sa place d'origine.
+
+
+2. **Fichier REJET :**
+* Identique au Fichier 1 original. Contient uniquement les lignes qui n'ont pas trouvé de correspondance dans fichier 2.
+
+

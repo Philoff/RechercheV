@@ -1,0 +1,26 @@
+{
+    "lang": "en",
+    "f1": "./f1_clients.csv",
+    "f2": "./f2_ref.csv",
+    "result": "./resultat.xlsx",
+    "out_format": "xlsx",
+    "k1": "client_id",
+    "k2": "sf_id",
+    "rejet": true,
+    "case_sensitive": true,
+    "commentaire": "\n\n\n\n\n\n\n\n",
+    "mapping": [
+        [
+            "ville",
+            "city"
+        ],
+        [
+            "code_postal",
+            "cp"
+        ],
+        [
+            "contrat",
+            "contrat_type"
+        ]
+    ]
+}

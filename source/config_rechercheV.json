@@ -1,0 +1,18 @@
+{
+    "lang": "fr",
+    "f1": "../demo_fichier1.csv",
+    "f2": "../demo_fichier2.csv",
+    "result": "../resultat.csv",
+    "out_format": "csv",
+    "k1": "client_id",
+    "k2": "client_id",
+    "rejet": true,
+    "case_sensitive": false,
+    "commentaire": "RechercheV \u2014 Equivalent d'une rechercheV Excel pour fichiers .csv\n- F1 est la source : sa structure (colonnes, ordre) est conserv\u00e9e dans le r\u00e9sultat. F2 fournit les donn\u00e9es d'enrichissement ; seules les colonnes mapp\u00e9es sont utilis\u00e9es.\n- La cl\u00e9 de liaison relie les lignes des deux fichiers (insensible \u00e0 la casse par d\u00e9faut). Les lignes de F1 sans correspondance dans F2 sont conserv\u00e9es vides ou envoy\u00e9es en rejet.\n- L'encodage du r\u00e9sultat est fait en ANSI pour \u00eatre compatible avec Excel. Le nombre de s\u00e9parateurs est contr\u00f4l\u00e9 sur toutes les lignes. Les fichiers r\u00e9sultats existants sont archiv\u00e9s automatiquement avant \u00e9crasement.\n\n\n",
+    "mapping": [
+        ["ville", "city"],
+        ["code_postal", "cp"],
+        ["contrat", "contrat_type"],
+        ["segment", "segment_client"]
+    ]
+}

@@ -1,0 +1,42 @@
+# === Environnement virtuel Python ===
+source/Lib/
+source/Scripts/
+source/pyvenv.cfg
+venv/
+.venv/
+env/
+
+# === Artefacts PyInstaller ===
+build/
+dist/
+*.spec
+
+# === Bytecode Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+
+# === Fichiers résultats générés ===
+resultat*.csv
+resultat*.xlsx
+*_Rejet.csv
+*_Rejet.xlsx
+*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9].*
+
+# === Fichiers temporaires du traitement ===
+*._tmp_rv
+
+# === Répertoires de travail des tests ===
+source/Lancetests/workdir/
+*.log
+
+# === Outils de développement ===
+.claude/
+.vscode/
+.idea/
+*.code-workspace
+
+# === Système ===
+.DS_Store
+Thumbs.db
+desktop.ini

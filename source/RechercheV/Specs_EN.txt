@@ -1,0 +1,86 @@
+Functional and Technical Specification — rechercheV
+---
+
+# Functional Specification: rechercheV Project (v2.7)
+
+**Subject:** Data enrichment connector — enriches File 1 using data from File 2.
+
+## 1. Program Purpose
+
+The program takes a source file (**File 1**) and fills its existing columns with information
+from a pivot file (**File 2**), using a common join key (e.g. `pds_ref`).
+
+---
+
+## 2. User Interface (UI)
+
+The interface is **responsive** (adapts to screen width) and includes a **vertical scrollbar**
+to handle a large number of mapping columns.
+
+### A. Stream selection (Block 1)
+
+* **File 1 (Source):** Master CSV file whose structure must be preserved.
+* **File 2 (Enrichment):** CSV file containing the supplementary data.
+* **Join keys:** Fields used to match rows (e.g. `pds_ref`). Lookup is **case-insensitive**
+  by default (PDS_01 = pds_01).
+
+### B. Column mapping (Block 2)
+
+The mapping defines how data is transferred from File 2 to File 1.
+
+* **Left column (Target F1):** Name of the column in the output file.
+  * *Case A:* The name already exists in File 1 → the column is updated in place.
+  * *Case B:* The name does not exist → the column is appended at the end of the file.
+
+* **Right column (Source F2):** Exact field name in the File 2 export (e.g. `PCE_PRM__c`).
+
+### C. Statistics & logs (Block 3)
+
+A blue text area displays progress and the final summary:
+
+* **Lines read:** Total from File 1.
+* **Enriched lines:** Number of matches found in File 2.
+* **Rejected lines:** Number of File 1 rows absent from File 2.
+
+---
+
+## 3. Processing Logic (Backend)
+
+### A. File handling & encodings
+
+* **Reading:** Handles CSV format with semicolon separator (`;`). Uses `utf-8-sig` encoding
+  to ignore Excel BOM characters.
+* **Writing:** Produces files in `utf-8` to ensure correct handling of accented characters.
+
+### B. Enrichment algorithm (Hash-Join)
+
+1. **Indexing:** File 2 is fully loaded into memory as a dictionary (hash map) for instant
+   access via the join key.
+2. **Streaming:** File 1 is read line by line (to avoid saturating RAM).
+3. **Reconciliation:** For each row in F1:
+   * If the key exists in the File 2 index, data is injected according to the mapping.
+     The row goes into the **Result** file.
+   * Otherwise, the row is copied as-is into the **Reject** file.
+
+---
+
+## 4. Configuration Management (Backward compatibility)
+
+The program saves its settings in `config_rechercheV.json`.
+
+* **V1 compatibility:** If the program detects an old config file (where File 2 was sometimes
+  on the left), it checks for the `__c` suffix. If found on the left side, columns are
+  automatically swapped so File 1 is on the left and File 2 on the right in the interface.
+* **Persistence:** All file paths and mapping rows are remembered for the next session.
+
+---
+
+## 5. Output File Structure
+
+1. **Result File:**
+   * Preserves the original column order of File 1.
+   * **No duplicates:** if a mapped column already exists in the source, it is filled in place.
+
+2. **Reject File:**
+   * Identical in structure to the original File 1. Contains only the rows that had no match
+     in File 2.

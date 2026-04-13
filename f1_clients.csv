@@ -1,0 +1,13 @@
+﻿client_id;nom;prenom;ville;code_postal;contrat;segment;statut
+C001;Dupont;Jean;;;;;Actif
+C002;Martin;Sophie;;;;;Actif
+C003;Bernard;Paul;;;;;Inactif
+C004;Petit;Marie;;;;;Actif
+C005;Robert;Luc;;;;;Actif
+C006;Leroy;Emma;;;;;Suspendu
+C007;Moreau;Pierre;;;;;Actif
+C008;Laurent;Julie;;;;;Actif
+C009;Simon;Marc;;;;;Inactif
+C010;Michel;Claire;;;;;Actif
+ZZZZ;Inconnu1;X;;;;;?
+YYYY;Inconnu2;Y;;;;;?
